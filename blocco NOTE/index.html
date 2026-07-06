@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>Pentagramma — blocco note musicale</title>
+  <title>bloccoNOTE</title>
   <style>
     :root {
       --paper: #f7f3e8;
@@ -396,6 +396,11 @@
       color: #666;
       margin-bottom: 6px;
     }
+
+    .special_mode {
+      color: var(--gold);
+      font-style: italic;
+    }
   </style>
 </head>
 
@@ -450,15 +455,15 @@
         <fieldset class="settings-group">
           <legend>Scala</legend>
 
-          <label><input type="radio" name="scala" value="Cromatica" checked> Cromatica</label>
+          <label class="special_mode"><input type="radio" name="scala" value="Cromatica" checked> Cromatica</label>
           <label><input type="radio" name="scala" value="Pentatonica"> Pentatonica</label>
           <br>
-          <label><input type="radio" name="scala" value="Ionica"> Ionica</label>
+          <label class="special_mode"><input type="radio" name="scala" value="Ionica"> Ionica</label>
           <label><input type="radio" name="scala" value="Dorica"> Dorica</label>
           <label><input type="radio" name="scala" value="Frigia"> Frigia</label>
           <label><input type="radio" name="scala" value="Lidia"> Lidia</label>
           <label><input type="radio" name="scala" value="Misolidia"> Misolidia</label>
-          <label><input type="radio" name="scala" value="Eolia"> Eolia</label>
+          <label class="special_mode"><input type="radio" name="scala" value="Eolia"> Eolia</label>
           <label><input type="radio" name="scala" value="Locria"> Locria</label>
 
         </fieldset>

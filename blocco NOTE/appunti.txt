@@ -1,0 +1,6 @@
+TO DO LIST
+- Pulsante metti-togli spazio dopo una nota
+- Regolare lo scroll, il top non deve scorrere, ma rimanere sempre in alto
+- Salvare i propri file in pagine diverse
+- Quando si trapone, cambia anche la nota di riferimento della scala
+-                   mod 12
