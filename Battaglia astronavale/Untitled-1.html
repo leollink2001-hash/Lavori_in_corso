@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Battaglia AstroNavale.js</title>
+  <style>
+    body {
+      display: flex;
+      margin: 0;
+    }
+
+    .view {
+      flex: 1;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+  <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+</head>
+
+<body>
+
+  <body style="background-color: rgb(0, 0, 0);">
+    <!-- contenuto della pagina -->
+  </body>
+
+
+  <div id="Totale">
+
+  
+  <div id="myShips" class="view"></div>
+  <div id="enemyShips" class="view"></div>
+  <canvas id="overlay1" width="700px" height="110px" style="position: absolute;
+      top: 610px; left: 25px;
+      pointer-events: none;"> </canvas>
+  <canvas id="overlay2" width="700px" height="110px" style="position: absolute;
+      top: 610px; right: 25px;
+      pointer-events: none;"> </canvas>
+
+  </div>
+
+  
+  <script src="./Inizializzare.js"></script>
+  <script src="./griglie.js"></script>
+  <script src="./astronavi.js"></script>
+  <script src="./principale.js"></script>
+  </script>
+</body>
+
+</html>

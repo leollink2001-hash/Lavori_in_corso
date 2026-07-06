@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caratterizzazione dei sottoinsiemi</title>
+  <style type="text/css">
+    button {
+      display: block;
+      margin: 20px auto;
+    }
+
+    p,
+    ul {
+      font-size: 1.3em;
+      line-height: 1.8;
+    }
+
+    input[type="text"] {
+      display: block;
+      font-size: 1.0em;   /* ingrandisce il testo */
+      padding: 10px;      /* ingrandisce la casella */
+      width: 300px;       /* opzionale, per larghezza */
+    }
+
+    input[type="checkbox"] {
+      width: 10px;        /* dimensione orizzontale */
+      height: 10px;       /* dimensione verticale */
+      transform: scale(1.7); /* altro modo per ingrandirle */
+      margin-right: 8px;  /* spazio dal testo accanto */
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .footnote {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+      color: blue;
+    }
+
+    .footnote sup {
+      font-size: 0.75em;
+    }
+
+    .footnote .tooltip {
+      visibility: hidden;
+      background-color: #eee;
+      color: #000;
+      text-align: left;
+      padding: 5px 10px;
+      border-radius: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+    }
+
+    .footnote:hover .tooltip {
+      visibility: visible;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>Caratterizzazione dei sottoinsiemi</h1>
+
+    <br>
+    <h2>Il gioco</h2>
+    <p>Siete in gruppo con amici e non sapete come passare il tempo? <br>
+      <em>Caratterizzazione dei Sottoinsiemi</em> è proprio il gioco che fa per voi. <br>
+      Inserite qui sotto i nomi dei partecipanti e con l'apposito pulsante potrete estrarre un sottoinsieme casuale del
+      gruppo. Dopodiché il gioco consisterà nel trovare una caratteristica che caratterizza tutti e soli i membri di
+      quel sottoinsieme, ad esempio:
+    </p>
+    <ul>
+      <li><em>"Solo Alberto e Beatrice sono nati a febbraio"</em></li>
+      <li><em>"Solo Carlotta è stata in America"</em></li>
+      <li><em>"Solo Davide, Edo e Francesca hanno fratelli"</em></li>
+      <li><em>"Nessuno di noi è mai stato su Giove"</em></li>
+      <li><em>"Tutti noi abbiamo avuto il raffreddore"</em></li>
+    </ul>
+    <p>Per quanto diverse due persone possano sembrare o strano possa sembrare il sottoinsieme si trova sempre una
+      caratteristica comune, basta cercarla! <br>
+      Buona ricerca!
+    </p>
+    <h2>Inserisci qui i nomi del gruppo</h2>
+
+    <div id="inputs"></div>
+    <button onclick="estraiSottoinsieme()">Estrai sottoinsieme</button>
+    <div id="risultato"></div>
+
+    <hr>
+
+    <h2>Variante statistica</h2>
+    <p>Nella versione base del gioco ogni nome avrà il 50% di probabilità di essere estratto, indipendentemente dagli
+      altri. <br>
+      Questo fa sì che, specialmente per un buon numero di giocatori, vengano estratti molto frequentemente dei
+      sottoinsiemi formati da circa metà dei partecipanti, e siano più rare configurazioni che comprendano tutti i
+      giocatori o nessuno. <br>
+      Questo, di per sé, non è un problema, ma si potrebbe invece richiedere un'estrazione che sia equa sul numero di
+      giocatori estratti, rendendo le configurazioni più "estreme" tanto probabili quanto quelle "centrali". <br>
+      Attivando la spunta qui sotto verrà modificato l'algoritmo di estrazione in modo da estrarre casualmente prima il
+      numero di giocatori da selezionare, e successivamente verrà estratto un tale numero di giocatori.
+    </p>
+    <input type="checkbox" id="usaNcasuale">Estrai prima numero
+
+    <hr>
+
+    <h2>Modalità hardcore</h2>
+    <p>
+      Siete un gruppo di temerari e volete essere sicuri di avere risolto tutte, ma proprio tutte le possibili
+      configurazioni?
+      Qui sotto potrete trovare una lista di tutti i possibili sottoinsiemi, così potrete scorrerli uno alla volta ed
+      essere sicuri di non averne dimenticato neanche uno.
+    </p>
+
+
+    <button onclick="genera()">Genera lista</button>
+    <div id="tuttiSottoinsiemi"></div>
+
+    <hr>
+
+    <h2>Note, precisazioni, consigli</h2>
+    <p>
+      <ol>
+      <li>Nonostante ogni configurazione corrisponda alla sua configurazione complementare (ossia il fatto che ogni sottoinsieme si possa indicare dicendo <em>"Tutti tranne..."</em>) le caratteristiche comuni da trovare devono essere in <em>positivo</em>, ossia <em>"Loro sono...", "Loro hanno..."</em>.
+      Questo, di fatto, rende diverse le cose da cercare in un determinato sottoinsieme da quelle da cercare invece nel sottoinsieme complementare.</li>
+      <li>Le caratteristiche da trovare possono essere anche fisiche e transitorie, ad esempio possono riguardare che cosa si sta indossando o come si è seduti al momento. Questo è consentito a patto che la caratteristica non venga forzata appositamente ai fini del gioco.</li>
+      <li>Lo scopo finale del gioco deve essere quello di intrattenere, divertire e lasciare che i suoi partecipanti si conoscano. Pertanto, ai fini del gioco, viene premiata l'originalità e la semplcità delle caratteristiche proposte. Le caratteristiche forzate (del tipo <em>"A, B e C sono nati tra Maggio e Luglio"</em>) sono da sfavorire rispetto a caratteristiche semplici ed eleganti (<em>"A, B e C hanno vissuto a Padova"</em>), e sta al gruppo decidere cosa sia accettabile e cosa non lo sia.</li>
+    </ol>
+    </p>
+
+
+
+
+    <script>
+      const maxNomi = 10;
+      const inputsDiv = document.getElementById("inputs");
+
+      // funzione per creare un nuovo input
+      function creaInput(numero) {
+        if (numero > maxNomi) return;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Nome " + numero;
+
+        // quando l'utente scrive qualcosa, aggiungiamo il prossimo input (se non esiste già)
+        input.addEventListener("input", () => {
+          if (input.value.trim() !== "" && inputsDiv.children.length < numero + 1) {
+            creaInput(numero + 1);
+          }
+        });
+
+        inputsDiv.appendChild(input);
+      }
+
+      // inizialmente aggiungo solo il primo input
+      creaInput(1);
+
+      function shuffle(array) {
+        let currentIndex = array.length;
+
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+
+          // Pick a remaining element...
+          let randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+      }
+
+      function estraiSottoinsieme() {
+        const inputs = document.querySelectorAll("#inputs input");
+        const usaNcasuale = document.getElementById("usaNcasuale").checked;
+        const nomi = [];
+
+        // raccogli i nomi non vuoti
+        inputs.forEach(input => {
+          if (input.value.trim() !== "") {
+            nomi.push(input.value.trim());
+          }
+        });
+
+        if (nomi.length === 0) {
+          document.getElementById("risultato").textContent = "Inserisci almeno un nome!";
+          return;
+        }
+
+        let sottoinsieme = [];
+        if (usaNcasuale) {
+          const k = Math.floor(Math.random() * (nomi.length + 1));
+          console.log(nomi.length);
+          console.log(k);
+          shuffle(nomi);
+          sottoinsieme = nomi.slice(0, k);
+        } else {
+          sottoinsieme = nomi.filter(() => Math.random() < 0.5);
+        }
+        // Estrai sottoinsieme con probabilità 50%
+
+
+        if (sottoinsieme.length === 0) {
+          document.getElementById("risultato").textContent = "Nessun nome è stato estratto!";
+        } else if (sottoinsieme.length == nomi.length) {
+          document.getElementById("risultato").textContent = "Tutti i nomi sono stati estratti!";
+        } else {
+          document.getElementById("risultato").textContent = "Nomi estratti: " + sottoinsieme.join(", ");
+        }
+      }
+
+      function powerSet(array) {
+        const result = [];
+
+        function helper(subset, index) {
+          if (index === array.length) {
+            result.push([...subset]); // aggiunge una copia del sottoinsieme
+            return;
+          }
+          // Non includere array[index]
+          helper(subset, index + 1);
+          // Includere array[index]
+          subset.push(array[index]);
+          helper(subset, index + 1);
+          subset.pop(); // backtrack
+        }
+
+        helper([], 0);
+        return result;
+      }
+
+      function genera() {
+        const inputs = document.querySelectorAll("#inputs input[type='text']");
+
+        // Crea l'array 'nomi' leggendo solo gli input non vuoti
+        const nomi_lista = [];
+        inputs.forEach(input => {
+          const value = input.value.trim();
+          if (value !== "") {
+            nomi_lista.push(value);
+          }
+        });
+
+        // Ora 'nomi' contiene tutti i nomi inseriti dall'utente
+
+        var tuttiSottoinsiemi = powerSet(nomi_lista);
+        tuttiSottoinsiemi.sort((a, b) => a.length - b.length);
+        // sostituire insieme vuoto e insieme completo
+        tuttiSottoinsiemi = tuttiSottoinsiemi.map(subset => {
+          if (subset.length === 0) return ["Nessuno"];
+          if (subset.length === nomi_lista.length) return ["Tutti"];
+          return subset;
+        });
+        
+
+        const container = document.getElementById("tuttiSottoinsiemi");
+        container.innerHTML = "";
+        tuttiSottoinsiemi.forEach(subset => {
+          const div = document.createElement("div");
+          div.textContent = subset.join(", "); // mostra i nomi separati da virgole
+          div.style.marginBottom = "5px"; // un piccolo spazio tra le righe
+          container.appendChild(div);
+        });
+      }
+
+    </script>
+
+  </div>
+</body>
+
+</html>

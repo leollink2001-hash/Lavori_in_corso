@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schermata Iniziale</title>
+    <style>
+        /* Reset rapido */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #00d4ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 50px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.7);
+            letter-spacing: 3px;
+        }
+
+        #bgCanvas {
+            position: fixed;
+            /* resta fermo sullo sfondo */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            /* sfondo */
+        }
+
+        #overlay {
+            position: relative;
+            z-index: 10;
+            /* sopra al canvas */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #00d4ff;
+            text-align: center;
+        }
+
+        #overlay h1 {
+            font-family: 'Courier New', Courier, monospace;
+            /* font monospaziato */
+            font-size: 3em;
+            letter-spacing: 31px;
+            /* distanza tra lettere */
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.7);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .start-window {
+            width: 320px;
+            height: 200px;
+            background: linear-gradient(145deg, #001100, #003300);
+            border: 4px solid #39ff14;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #39ff14, inset 0 0 10px #39ff14;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.5em;
+        }
+
+        .start-window:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #39ff14, inset 0 0 15px #39ff14;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bgCanvas"></canvas>
+
+    <div id="overlay">
+        <h1>B4TT4GL1A<br>4STR0N4VAL3</h1>
+
+        <div class="start-window" id="startBtn">
+            CLICCA QUI PER INIZIARE <br>
+            <br>
+            POI CLICCA ANCORA PER LO SCHERMO INTERO
+        </div>
+    </div>
+
+    <script>
+        // Imposta il canvas a tutta finestra
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Configurazione griglia
+        const spacing = 60; // distanza tra linee
+        const lines = [];
+
+        // Inizializza linee con stato luminoso casuale
+        for (let x = 0; x < canvas.width; x += spacing) {
+            lines.push({ x, alpha: Math.random() * 0.5 + 0.2, direction: Math.random() < 0.5 ? 1 : -1 });
+        }
+        for (let y = 0; y < canvas.height; y += spacing) {
+            lines.push({ y, alpha: Math.random() * 0.5 + 0.2, direction: Math.random() < 0.5 ? 1 : -1, horizontal: true });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // disegna linee verticali e orizzontali
+            lines.forEach(line => {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(57,255,20,${line.alpha})`; // verde neon
+                ctx.lineWidth = 2;
+
+                if (line.horizontal) {
+                    ctx.moveTo(0, line.y);
+                    ctx.lineTo(canvas.width, line.y);
+                } else {
+                    ctx.moveTo(line.x, 0);
+                    ctx.lineTo(line.x, canvas.height);
+                }
+                ctx.stroke();
+
+                // anima accensione / spegnimento
+                line.alpha += 0.005 * line.direction;
+                if (line.alpha > 0.6) line.direction = -1;
+                if (line.alpha < 0.1) line.direction = 1;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Bottone per partire
+        const btn = document.getElementById('startBtn');
+        btn.addEventListener('click', () => {
+            window.location.href = 'BattAstrNav.html';
+        });
+    </script>
+</body>
+
+</html>

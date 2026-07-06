@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Progetti</title>
+    <style>
+        .container {
+            max-width: 70%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .subtitle {
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        li a {
+            display: inline-block;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transform-origin: left center;
+            transition: transform 1s ease;
+            line-height: 50px;
+        }
+
+        li a:hover {
+            transform: scale(1.3);
+        }
+
+        li {
+            font-size: 1.5rem;
+            line-height: 50px;
+        }
+
+        legend {
+            font-size: 1.1rem;
+            font-weight: bolder;
+            color: #555;
+        }
+
+        fieldset {
+            background-color:#f2f2f2;
+        }
+
+        span {
+            font-weight: bold;
+            font-size:medium;
+        }
+
+        span::after {
+            content: "";
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0% {
+                content: "";
+            }
+
+            25% {
+                content: ".";
+            }
+
+            50% {
+                content: "..";
+            }
+
+            75%,
+            100% {
+                content: "...";
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Il cantiere</h1>
+        <p class="subtitle">
+            👷 Casco protettivo obbligatorio.
+        </p>
+
+        <fieldset>
+            <legend>Matematica</legend>
+            <ul>
+                <li><a href="Poincaré/">Poincaré</a></li>
+                <li>...</li>
+                <li><span class="cone">🚧 Lavori in corso</span> </li>
+                <li>...</li>
+            </ul>
+        </fieldset>
+
+        <br>
+
+        <fieldset>
+            <legend>Giochi</legend>
+            <ul>
+                <li><a href="Caratterizzazione dei sottoinsiemi/">Caratterizzazione dei Sottoinsiemi</a></li>
+                <li><a href="Battaglia astronavale/">Battaglia astronavale</a></li>
+                <li>...</li>
+                <li><span class="cone">🛠️ Personale al lavoro</span> </li>
+                <li>...</li>
+            </ul>
+        </fieldset>
+
+        <br>
+
+        <fieldset>
+            <legend>App</legend>
+            <ul>
+                <li><a href="blocco NOTE/">blocco NOTE</a></li>
+                <li>...</li>
+                <li><span class="cone">🏗️ Cantiere in costruzione</span> </li>
+                <li>...</li>
+            </ul>
+        </fieldset>
+
+
+    </div>
+</body>
+
+</html>

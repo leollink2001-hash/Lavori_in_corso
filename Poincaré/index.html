@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disco di Poincaré</title>
+    <style type="text/css">
+        canvas {
+            border: 2px solid rgb(255, 255, 255);
+            display: block;
+            margin: 20px auto;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+        }
+
+        p,
+        ul {
+            font-size: 1.3em;
+            line-height: 1.8;
+        }
+
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .footnote {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            color: blue;
+        }
+
+        .footnote sup {
+            font-size: 0.75em;
+        }
+
+        .footnote .tooltip {
+            visibility: hidden;
+            background-color: #eee;
+            color: #000;
+            text-align: left;
+            padding: 5px 10px;
+            border-radius: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+        .footnote:hover .tooltip {
+            visibility: visible;
+        }
+    </style>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Il disco di Poincaré</h1>
+
+        <br>
+        <h2>1- Uno strano mondo</h2>
+        <p>Non tutti sanno che esiste un mondo molto, molto particolare. <br>
+            Per noi che lo osserviamo da fuori è un mondo piatto e circolare, quasi noioso, ma all'interno di esso
+            succede
+            uno strano fenomeno: man mano che i suoi bizzarri abitanti provano ad avvicinarsi al suo bordo, questi
+            diventano
+            sempre più piccoli,
+            e sempre più piccoli diventano i loro oggetti, i loro vestiti, le loro gambe e i loro passi, sempre di più,
+            rendendo impossibile, per quanto a lungo si possa camminare, raggiungere il limite circolare del loro mondo.
+        </p>
+        <p>Proviamo ad immedesimarci un po' di più in uno dei suoi simpatici abitanti durante una sua sessione a caccia
+            di
+            cibo. <br>
+            Usa il tasto W per spostarti in avanti, A e D per voltarti a sinistra e destra.
+        </p>
+
+        <canvas width="500" height="500" id="my_Canvas1" tabindex="0"></canvas>
+        <button onclick="riavvia()">Riavvia</button>
+
+        <br>
+        <h2>2- Un mondo infinito?</h2>
+        <p>Da fuori potrebbe sembrare una piccola prigione, ma non lo è affatto! <br>
+            Gli abitanti di questo mondo non si sentono intrappolati in un <em>mondo finito</em>, loro potrebbero
+            camminare
+            avanti ancora e ancora: sono liberi di correre, di cacciare, di giocare (e anche di studiare, se avanza un
+            po' di tempo). <br>
+            Nonostante a noi sembri che i suoi abitanti non riescano mai a superare quello che noi percepiamo come
+            "bordo" del mondo (e misurando quale percentuale del bordo è stata raggiunta, non la vedremo mai diventare
+            il 100%), è
+            importante sapere che dal loro punto di vista lo spazio è davvero infinito e si possono, infatti,
+            allontanare dal centro
+            del mondo di un numero infinito di passi.<br>
+            I loro passi, i loro metri pieghevoli, e i loro metri da sarta, che utilizzano per misurare le distanze,
+            si rimpiccioliscono con loro, così come le loro automobili e i loro frigoriferi: insomma, per loro c'è uno
+            spazio infinito in cui costruire ville con piscina, aereoporti con jet privati, smartwatch di ultima
+            generazione
+            e tutto il resto che possa permettere di vivere una vita umile e frugale.
+        </p>
+
+        <canvas width="500" height="500" id="my_Canvas2" tabindex="0"></canvas>
+        <button onclick="riavvia()">Riavvia</button>
+
+        <br>
+        <h2>3- La distanza dal bordo</h2>
+        <p>Gli abitanti di questo mondo non sono creature particolarmente attente, né particolarmente brave in
+            matematica.
+            Ma degli studiosi del nostro mondo si sono accorti, osservando la semifinale di un importante torneo di uno
+            sport locale, che il modo in cui essi si rimpiccioliscono segue una legge ben precisa: <br>
+            Ciò che al centro del mondo ha una lunghezza <em>d=1</em>, quando si trova a distanza <em>r</em> dal centro
+            del
+            mondo appare di lunghezza
+            $$ d' = 1- (\frac{r}{R})^2 $$
+            dove <em>R</em> è il raggio del mondo circolare studiato. <br>
+            Notiamo che quando la distanza <em>r</em> è 0 (ossia al centro del mondo), la sua lunghezza è davvero 1, e
+            che
+            diventa invece sempre più vicina a 0 man mano che <em>r</em> si avvicina ad <em>R</em>.
+        </p>
+        <p>Proviamo a capire quanti passi deve fare un abitante di questo mondo per raggiungere quello che noi vediamo
+            come
+            bordo, supponendo che parta dal centro.
+            A noi esterni il bordo appare di raggio <em>R</em>, che posso vedere come la somma di tanti intervalli
+            <em>ds</em>. <br>
+            Se i nostri <em>ds</em> sono tutti equivalenti, però, non lo sono per l'abitante del mondo, che man mano che
+            rimpicciolisce avrà bisogno di fare più passi per compiere lo stesso <em>ds</em>. <br>
+            Se nel centro del mondo riesce a compiere un <em>ds</em> con un passo, quando le sue gambe saranno lunghe la
+            metà avrà bisogno di due passi per lo stesso <em>ds</em>, e in generale, vista la legge con cui si
+            rimpicciolisce, quando sarà nella posizione <em>s</em> avrà bisogno di
+            $$ \frac{1}{1-(\frac{s}{R})^2} $$
+            passi per compiere un <em>ds</em>. <br>
+            Per capire quanti passi avrà fatto in totale ci basta quindi sommare tutti i contributi infinitesimi
+            <em>ds</em>, ciascuno pesato secondo quanti passi sia lungo per un abitante del mondo, ossia occorre
+            <em>integrare</em> da 0 a <em>R</em> in <em>ds</em> la formula precedente. <br>
+            Supponendo per semplicità <em>R</em>=1, non ci resta che calcolare l'integrale (improprio):
+            $$ \int_{0}^{1}\frac{1}{1-s^2} ds =
+            \left[ \frac{1}{2} \ln\left( \left| \frac{x+1}{x-1} \right| \right) \right]^{1}_{0} =
+            \infty $$
+            Ossia è richiesto un numero infinito di passi per raggiungere il bordo. <br>
+            Più in generale, partendo dal centro e volendo raggiungere un punto situato a distanza \( \rho \) occorrono
+            $$ \frac{1}{2} \ln\left( \left| \frac{\rho +1}{\rho -1} \right| \right) $$
+            passi (o tempo, supponendo che il nostro abitante si muova a velocità unitaria).
+        </p>
+
+        <canvas width="500" height="500" id="my_Canvas3" tabindex="0"></canvas>
+
+        <p>Una formulazione equivalente della formula precedente è quella data utilizzando le funzioni iperboliche,
+            infatti
+            si ha che:
+            $$ \frac{1}{2} \ln\left( \left| \frac{\rho +1}{\rho -1} \right| \right) = \frac{1}{2} \mathrm{arcosh} \left(
+            1+
+            2 \frac{\rho ^2}{1- \rho^2} \right),$$
+            dove \( \mathrm{arcosh}(x) \), anche chiamata \( \mathrm{settcosh}(x) \), è la funzione inversa della
+            funzione
+            iperbolica \( \cosh(x) \), e vale l'uguaglianza
+            $$ \mathrm{arcosh}(x) = \ln \left( x + \sqrt{x^2+1} \right) .$$
+        </p>
+
+        <br>
+        <h2>4- La distanza tra punti qualsiasi</h2>
+        <p>Se invece volessimo calcolare quanti passi occorrerebbero ad un abitante di questo mondo per andare
+            <strong>da un
+                punto qualsiasi ad un altro punto qualsiasi?</strong> <br>
+            Il problema, purtroppo o per fortuna, è molto più profondo di così. <br>
+            Se prima era ragionevole supporre che per raggiungere un punto qualsiasi partendo dal centro del mondo
+            bastasse
+            camminare in linea retta, ora, nel calcolare la distanza (in passi) tra due punti qualsiasi, la situazione
+            si
+            complica, in quanto un passo fatto vicino al centro del mondo è più lungo di uno fatto più in periferia.
+            <br>
+            Quando, nella prima sezione, ci siamo immedesimati in un cacciatore, era facile avere l'impressione che
+            questo
+            rallentasse andando verso il bordo, ma la sua velocità, il suo impegno nella camminata e le sue energie
+            impiegate non stavano diminuendo affatto. Il nostro cacciatore si è sempre mosso con la stessa velocità,
+            facendo
+            sempre lo stesso numero di passi al secondo, ma i suoi passi diventavano sempre più piccoli. <br>
+            I cacciatori più esperti hanno capito come sfruttare a pieno questo effetto di ingrandimento e
+            rimpicciolimento
+            delle distanze per raggiungere velocemente la loro preda: hanno capito che può essere molto conveniente
+            <strong> avvicinarsi al centro della circonferenza</strong> durante il cammino, compiendo una traiettoria a
+            forma di arco
+            verso la loro meta. <br>
+            Questo effetto risulta particolarmente evidente quando sia il punto di partenza che quello di arrivo si
+            trovano lontani dal centro, in zone in cui la dimensione dei passi (e di conseguenza la velocità, dal nostro
+            punto di vista) dei viaggiatori
+            sono ridotte al minimo. <br>
+        </p>
+        <p>I più grandi matematici e geometri del nostro mondo, studiando il comportamento di questi esperti cacciatori,
+            hanno osservato che l'arco che essi compiono durante i loro spostamenti è:
+        <ul>
+            <li>un <strong>diametro</strong> del mondo, se il segmento che unisce punto di partenza e di arrivo passa
+                per il
+                centro</li>
+            <li>altrimenti, un <strong>arco di circonferenza</strong> che incontra sempre la circonferenza del mondo in
+                due
+                punti, <strong>formando con essa angoli di 90°</strong> </li>
+        </ul>
+        </p>
+        <p>Nella simulazione sottostante potrai vedere in ogni istante il percorso migliore che conduce fino al target
+            verde. <br>
+            Nota come sia un arco di circonferenza e che le due circonferenze formano angoli retti nei loro punti di
+            intersezione. <br>
+            Attivando la <em>modalità gara</em> potrai sfidare un cacciatore alle prime armi, che è convinto che
+            muoversi in
+            linea retta sia la scelta migliore, fagli vedere come si fa!
+
+        </p>
+
+        <canvas width="500" height="500" id="my_Canvas4" tabindex="0"></canvas>
+        <button onclick="riavvia()">Riavvia</button>
+        <button onclick="setModeGara()">Modalità gara</button>
+
+        <p>Esiste una formula che esprime la distanza tra due punti qualsiasi all'interno di questo mondo, che
+            generalizza
+            la formula vista precedentemente: <br>
+            Anch'essa esprime la lunghezza del cammino vista come somma dei contributi <em>ds</em> del cammino, che
+            stavolta
+            però ha come traiettoria l'arco di circonferenza (ossia il percorso più veloce). <br>
+            In maniera simile a quanto visto prima, risulta che la distanza tra due punti <em>u</em> e <em>v</em> del
+            mondo
+            è:
+            $$ d(u, v) = \mathrm{settcosh} \left( 1 + 2 \frac{||u-v||^2}{(1-||u||^2)(1-||v||^2)} \right)$$
+            dove \( ||*|| \) è la norma euclidea
+            <span class="footnote">
+                <sup>[1]</sup>
+                <span class="tooltip">\( ||v|| = \sqrt{v_x^2 + v_y^2} \)
+                </span>
+            </span>
+            , rispetto al centro del disco. <br>
+            Notiamo che se i due punti coincidono la distanza vale \( d(1)= 0 \) e se uno dei due punti ha norma = 0
+            (ossia
+            è nel centro del disco), otteniamo la formula vista nella sezione precedente.
+        </p>
+        <p>È anche utile osservare che nessuno degli abitanti del mondo si è mai interessato niente del genere,
+            neanche lontanamente.</p>
+
+        <br>
+        <h2>5- La notte porta consiglio</h2>
+        <p> Un bel giorno, in questo strano mondo, durante una maratona dei film della trilogia originale della saga di
+            <em>Scar Wars</em>
+            <span class="footnote">
+                <sup>[2]</sup>
+                <span class="tooltip">Una saga di film ambientati nello spazio, <br>
+                    famosa per le sue spade laser che provocano <br>
+                    numerose cicatrici spaziali.
+                </span>
+            </span>, un giovane fan si chiese che strada avrebbe percorso il fascio di una spada laser puntata contro un
+            nemico. <br>
+            Sapeva, infatti, che la luce percorre sempre il cammino più veloce per andare da un punto ad un altro, e
+            decise di costruire una piccola spada laser artigianale per testare la sua idea: un cristallo kyber di qua,
+            un'elsa approssimativa di là, spense la luce e...
+        </p>
+
+        <canvas width="500" height="500" id="my_Canvas5" tabindex="0"></canvas>
+        <button onclick="riavvia()">Riavvia</button>
+
+        <p>
+            Il giovane <em>padovan</em>
+            <span class="footnote">
+                <sup>[3]</sup>
+                <span class="tooltip">Così venivano chiamati gli apprendisti provenienti<br>
+                    dalle regioni settentrionali del disco.
+                </span>
+            </span>
+            iniziò presto a seguire il percorso indicato dell'arma che lui stesso aveva costruito, e in un lampo
+            realizzò che la sua intuizione era corretta!
+            <em>La fisica non mentiva: il fascio di luce seguiva sempre il percorso più breve tra due punti!</em> Il
+            giovane guerriero avrebbe trovato d'ora in poi sempre la strada più veloce per raggiungere la sua
+            destinazione!
+            <span class="footnote">
+                <sup>[4]</sup>
+                <span class="tooltip">Se pensate che questo possa essere un potere inutile <br>
+                    si vede che non avete mai dovuto correre al bagno <br>
+                    dopo un'abbuffata di cozze galattiche.
+                </span>
+            </span>
+            Aveva trovato ciò che per secoli i più grandi scienziati, filosofi e alchimisti avevano cercato invano!
+            L'oggetto della leggenda! Il mitico, il favoloso... <strong>segmento</strong>.
+        </p>
+        <p>
+            In un attimo le forze del male tentarono di impadronirsi del suo potere! Provò a difendersi roteando su se
+            stesso <em>(tieni premuto il tasto P mentre ruoti)</em> per tenere tutti i nemici lontani almeno quanto la
+            lunghezza della sua spada! <em>DRRIIIN!</em> <br>
+            Ma quella allora...! <em>DRRIIIN!</em> Ruotando a quella velocità la spada appena trovato una
+            <strong>circonferenza</strong>! Ma le forze del lato oscuro stanno arrivando! <em>DRRIIIN!</em> Che sia
+            questa la fine per il disco di... di...
+        </p>
+
+        <br>
+        <h2>6- Poincaré</h2>
+        <p>
+            Jules Henri Poincaré si svegliò di soprassalto in un bagno di sudore. <em>DRRIIIN!</em> <br>
+            Mondi dentro dischi, creature che si rimpiccioliscono, cavalieri stellari... Aveva fatto davvero uno strano
+            sogno, ma il suono della sveglia lo costrinse a tornare alla realtà.
+        </p>
+        <p>
+            Era un tipo abitudinario, lui. <br>
+            Tutti i giorni si dedicava ai suoi studi di matematica dalle 10:00 alle 12:00 e dalle 17:00 alle 19:00,
+            mentre di sera leggeva articoli scientifici. <br>
+            Ultimamente si stava dedicando alla geometria. È da qualche decennio, ormai, che si sta parlando di nuove
+            forme di geometrie non standard, geometrie <em>astrali</em>, geometrie <em>anti-euclidee</em>, ma per ora
+            queste geometrie esistevano solo nel mondo dei sogni.
+        </p>
+        <p>
+            Henri si sedette alla scrivania e indossò i grossi occhiali. La vista non era sicuramente il suo punto
+            forte, ma compensava con la grande capacità di visualizzare ciò che sentiva o immaginava. <br>
+            Rilesse il saggio di Beltrami, localmente il suo modello funzionava, ma occorreva di più. <br>
+            Serviva un modello di geometria che globalmente negasse il <em>V postulato di Euclide</em> in eccesso, ossia
+            un modello in cui date una retta e un punto, esistessero <em>infinite rette parallele</em> alla retta data
+            passanti per il punto.
+        </p>
+        <p>
+            Il suo pensiero tornò alle spade laser, agli uomini a caccia delle prede e alle gare nel disco. <br>
+            <em>Esistevano solo nel mondo dei sogni</em>, eh?
+        </p>
+        <canvas width="500" height="500" id="my_Canvas6" tabindex="0"></canvas>
+        <button onclick="draw6_paper()">Cancella</button>
+
+
+        <script>
+
+            var x = 0;
+            var y = 0;
+            var dir = Math.PI / 2;
+            var v = 1.5;
+            var v_ang = 0.05;
+            var r = 10;
+            var L = 500;
+            var H = 500;
+            var WORLD_R = L * 0.45;
+            var R = (x ** 2 + y ** 2) ** 0.5;
+            //Le variabili seguenti sono tutte per la modalità gara nella sezione 4
+            var MODE_GARA = 0;
+            const x_start = 25;
+            const y_start = 190;
+            var winner = 0;
+            var x_opp = x_start;
+            var y_opp = y_start;
+            var dir_opp = Math.PI / 3;
+            var r_opp = r;
+            var dist_reale = 0;
+            var points6 = [];
+
+            //GENERA UN OGGETTO CASUALE
+            var R_obj = Math.random() * (WORLD_R - 20);  //distanza random dal centro
+            var dir_obj = Math.random() * 2 * Math.PI;   //direzione random
+            var x_obj = R_obj * Math.cos(dir_obj);   //x dell'oggetto
+            var y_obj = R_obj * Math.sin(dir_obj);   //y dell'oggetto
+            var r_obj = Math.random() * 4 + 5;          //raggio dell'oggetto
+
+            //GENERO GLI OGGETTI CANVAS
+            var canvas1 = document.getElementById('my_Canvas1');
+            var cg1 = canvas1.getContext("2d");
+            var canvas2 = document.getElementById('my_Canvas2');
+            cg2 = canvas2.getContext("2d");
+            var canvas3 = document.getElementById('my_Canvas3');
+            cg3 = canvas3.getContext("2d");
+            var canvas4 = document.getElementById('my_Canvas4');
+            cg4 = canvas4.getContext("2d");
+            var canvas5 = document.getElementById('my_Canvas5');
+            cg5 = canvas5.getContext("2d");
+            var canvas6 = document.getElementById('my_Canvas6');
+            cg6 = canvas6.getContext("2d");
+            const bufferCanvas = document.createElement("canvas");
+            bufferCanvas.width = L * 2;
+            bufferCanvas.height = H * 2;
+            const bufferCtx = bufferCanvas.getContext("2d");
+            let angle_galaxy = 0;
+
+            draw3() //Disegna la funzione nel canvas 3, unica finestra non interattiva
+            generateGalaxy(); //Disegna le stelle nel canvas 5
+            draw6_paper();
+
+            let keysPressed = {}; //Serve per leggere i tasti premuti
+            document.addEventListener('keydown', e => { keysPressed[e.key.toLowerCase()] = true; });
+            document.addEventListener('keyup', e => { keysPressed[e.key.toLowerCase()] = false; });
+            canvas6.addEventListener('mousedown', function (e) {
+                const rect = canvas6.getBoundingClientRect();
+                const xP = e.clientX - rect.left;
+                const yP = e.clientY - rect.top;
+                drawSketchyPoint(xP, yP);
+                const P = [xP, yP];
+                points6.push(P);
+                if (points6.length >= 2) {
+                    let [xc6, yc6, r6] = getcircle3(cg6, points6[0][0]-L/2, points6[0][1]-H/2, points6[1][0]-L/2, points6[1][1]-H/2);
+                    drawSketchyCircle(cg6, xc6+L/2, yc6+H/2, r6);
+                    points6 = []; // resetta se ci sono già due punti
+                }
+            });
+
+            function generateGalaxy() {
+                bufferCtx.fillStyle = "rgb(15, 15, 60)";
+                bufferCtx.fillRect(0, 0, L * 2, H * 2);
+
+                for (let i = 0; i < 1000; i++) {
+                    let x = Math.random() * L * 2 + 20; //+20 serve solo per evitare stelle nel bordo he fanno casini
+                    let y = Math.random() * H * 2 + 20;
+                    let r = Math.random() * 1.5 + 0.2;
+                    bufferCtx.beginPath();
+                    bufferCtx.arc(x, y, r, 0, Math.PI * 2);
+                    bufferCtx.fillStyle = "white";
+                    bufferCtx.fill();
+                }
+            }
+
+            function riavvia() {
+                x = 0;
+                y = 0;
+                r = 10;
+                MODE_GARA = 0;
+                winner = 0;
+            }
+
+            function move() {
+                //comandi WASD per muovere il personaggio
+                let v_dash = 1;
+                if (keysPressed['p']) {
+                    v_dash = 4.20;
+                }
+                if (keysPressed['a']) { dir = (dir + v_ang * v_dash) % (2 * Math.PI); }
+                if (keysPressed['d']) { dir = (dir - v_ang * v_dash) % (2 * Math.PI); }
+                if (keysPressed['w']) {
+                    R = (x ** 2 + y ** 2) ** 0.5;
+                    let v_loc = 1 - (R / WORLD_R) ** 0.5;
+                    r = Math.min(10, WORLD_R - R);
+                    x += v * v_loc * Math.cos(dir);
+                    y -= v * v_loc * Math.sin(dir); // Nota il meno: y aumenta verso il basso nel canvas
+                }
+                if (MODE_GARA == 0) { // QUESTO VALE QUANDO NON SONO NELLA MODALITA GARA
+                    if (((x - x_obj) ** 2 + (y - y_obj) ** 2) ** 0.5 < r_obj + r * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2)))) {
+                        R_obj = Math.random() * (WORLD_R - 20);  //distanza random dal centro
+                        dir_obj = Math.random() * 2 * Math.PI;   //direzione random
+                        x_obj = R_obj * Math.cos(dir_obj);   //x dell'oggetto
+                        y_obj = R_obj * Math.sin(dir_obj);   //y dell'oggetto
+                        r_obj = Math.random() * 4 + 5;          //raggio dell'oggetto
+                    }
+                } else if (MODE_GARA == 1) { //MODALITA GARA
+                    //MOVIMENTO AVVERSARIO
+                    if (keysPressed['w'] && winner == 0) { //si muove insieme a me
+                        var R_opp = (x_opp ** 2 + y_opp ** 2) ** 0.5;
+                        let v_loc = 1 - (R_opp / WORLD_R) ** 0.5;
+                        // r = Math.min(10, WORLD_R - R);
+                        x_opp += v * v_loc * Math.cos(dir_opp);
+                        y_opp -= v * v_loc * Math.sin(dir_opp); // Nota il meno: y aumenta verso il basso nel canvas
+                    }
+                    if (winner == 0 && ((x - x_obj) ** 2 + (y - y_obj) ** 2) ** 0.5 < r_obj + r * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2)))) {
+                        winner = 1;
+                    }
+                    if (winner == 0 && ((x_opp - x_obj) ** 2 + (y_opp - y_obj) ** 2) ** 0.5 < r_obj + r * (1 - ((x_opp ** 2 + y_opp ** 2) / (WORLD_R ** 2)))) {
+                        winner = 2;
+                    }
+                }
+
+            }
+
+            function deep(x) {
+                let d = 1;
+                while (1 === 1) {
+                    if (x < (1 - (1 / 10) ** d)) {
+                        return d;
+                    }
+                    d += 1;
+                }
+            }
+
+            function color_N(N) {
+                let k = 50
+                return 'rgb(' + String(255 - N * k) + ',' + String(255 - N * k) + ',' + String(255 - N * k) + ')'
+            }
+
+            function funzione_distanza(x) {
+                return 0.5 * Math.log(Math.abs(x + 1) / Math.abs(x - 1))
+            }
+
+            function funzione_inversa(x) {
+                return Math.tanh(x);
+            }
+
+            function inv_circ(x, y) {
+                //dato un punto (x, y) ritorna il punto (X,Y) dato dall'inversione circolare di quel punto rispetto alla crf
+                let r = (x ** 2 + y ** 2) ** 0.5;
+                let m = y / x;
+                let R = WORLD_R ** 2 / r;
+                if (x >= 0) {
+                    let X = R * Math.cos(Math.atan(m));
+                    let Y = R * Math.sin(Math.atan(m));
+                    return [X, Y]
+                }
+                let X = -R * Math.cos(Math.atan(m));
+                let Y = -R * Math.sin(Math.atan(m));
+                return [X, Y];
+            }
+
+            function getcircle3(cg, x1, y1, x3, y3) { //disegna un cerchio passante per 3 punti
+                //1° punto, coordinate player, prese in inputs
+                let [x2, y2] = inv_circ(x1, y1);  //2° punto, inv_circ del player
+                // let [x3, y3] = [x_obj, y_obj];  //3° punto, coordinate oggetto
+
+                let M1 = -(x3 - x1) / (y3 - y1);
+                let Q1 = (y3 + y1) / 2 - M1 * (x3 + x1) / 2;
+
+                let M2 = -(x2 - x1) / (y2 - y1);
+                let Q2 = (y2 + y1) / 2 - M2 * (x2 + x1) / 2;
+
+                let xc = (Q2 - Q1) / (M1 - M2);
+                let yc = M1 * (Q2 - Q1) / (M1 - M2) + Q1;
+
+                let r = ((xc - x1) ** 2 + (yc - y1) ** 2) ** 0.5
+
+                return [xc, yc, r];
+            }
+
+            function drawcircle3(cg, x1, y1, x3, y3) { //disegna un cerchio passante per 3 punti
+                if (x == 0 && y == 0) {
+                    let q = H / 2 - y3 / x3 * L / 2;
+
+                    cg.beginPath();
+                    cg.moveTo(0, q);
+                    cg.lineTo(H, L * y3 / x3 + q);
+                    cg.stroke()
+                }
+                //1° punto, coordinate player, prese in inputs
+                let [x2, y2] = inv_circ(x1, y1);  //2° punto, inv_circ del player
+                // let [x3, y3] = [x_obj, y_obj];  //3° punto, coordinate oggetto
+
+                let M1 = -(x3 - x1) / (y3 - y1);
+                let Q1 = (y3 + y1) / 2 - M1 * (x3 + x1) / 2;
+
+                let M2 = -(x2 - x1) / (y2 - y1);
+                let Q2 = (y2 + y1) / 2 - M2 * (x2 + x1) / 2;
+
+                let xc = (Q2 - Q1) / (M1 - M2);
+                let yc = M1 * (Q2 - Q1) / (M1 - M2) + Q1;
+
+                let r = ((xc - x1) ** 2 + (yc - y1) ** 2) ** 0.5
+
+                cg.beginPath();
+                cg.fillStyle = 'grey';
+                cg.arc(xc + L / 2, yc + H / 2, r, 0, Math.PI * 2, true);
+                cg.closePath();
+                cg.stroke();
+
+                return [xc, yc, r];
+            }
+
+            function intersection(x0, y0, r0, x1, y1, r1) {
+                var a, dx, dy, d, h, rx, ry;
+                var x2, y2;
+
+                /* dx and dy are the vertical and horizontal distances between
+                 * the circle centers.
+                 */
+                dx = x1 - x0;
+                dy = y1 - y0;
+
+                /* Determine the straight-line distance between the centers. */
+                d = Math.sqrt((dy * dy) + (dx * dx));
+
+                /* Check for solvability. */
+                if (d > (r0 + r1)) {
+                    /* no solution. circles do not intersect. */
+                    return false;
+                }
+                if (d < Math.abs(r0 - r1)) {
+                    /* no solution. one circle is contained in the other */
+                    return false;
+                }
+
+                /* 'point 2' is the point where the line through the circle
+                 * intersection points crosses the line between the circle
+                 * centers.  
+                 */
+
+                /* Determine the distance from point 0 to point 2. */
+                a = ((r0 * r0) - (r1 * r1) + (d * d)) / (2.0 * d);
+
+                /* Determine the coordinates of point 2. */
+                x2 = x0 + (dx * a / d);
+                y2 = y0 + (dy * a / d);
+
+                /* Determine the distance from point 2 to either of the
+                 * intersection points.
+                 */
+                h = Math.sqrt((r0 * r0) - (a * a));
+
+                /* Now determine the offsets of the intersection points from
+                 * point 2.
+                 */
+                rx = -dy * (h / d);
+                ry = dx * (h / d);
+
+                /* Determine the absolute intersection points. */
+                var xi = x2 + rx;
+                var xi_prime = x2 - rx;
+                var yi = y2 + ry;
+                var yi_prime = y2 - ry;
+
+                /* cg5.beginPath(); //bordo esterno
+                cg5.fillStyle = 'blue';
+                cg5.arc(x+20*Math.cos(dir) + L / 2,  y-20*Math.sin(dir) + H / 2, 5, 0, Math.PI * 2, true);
+                cg5.closePath();
+                cg5.fill(); */
+
+                if ((xi - (x + 20 * Math.cos(dir))) ** 2 + (yi - (y - 20 * Math.sin(dir))) ** 2 <
+                    (xi_prime - (x + 20 * Math.cos(dir))) ** 2 + (yi_prime - (y - 20 * Math.sin(dir))) ** 2) {
+                    return [xi, yi];
+                } else {
+                    return [xi_prime, yi_prime];
+                }
+
+
+            }
+
+            function setModeGara() {
+                MODE_GARA = 1;
+                winner = 0;
+
+                x = x_start;
+                y = y_start;
+                r = 10;
+                x_obj = 190;
+                y_obj = 25;
+                dir = Math.PI / 2;
+
+                x_opp = x_start;
+                y_opp = y_start;
+                dir_opp = Math.PI / 4;
+                r_opp = r;
+
+            }
+
+            //le funzioni draw_n si occupano di disegnare nell'n-esimo canvas
+            function draw1() {
+                cg1.clearRect(0, 0, L, H);
+
+                //DISEGNO IL MONDO
+                cg1.beginPath(); //bordo esterno
+                cg1.fillStyle = 'black';
+                cg1.arc(L / 2, H / 2, WORLD_R + 2, 0, Math.PI * 2, true);
+                cg1.closePath();
+                cg1.fill();
+
+                cg1.beginPath(); //cerchio giallo
+                cg1.fillStyle = 'rgb(250, 250, 190)';
+                cg1.arc(L / 2, H / 2, WORLD_R, 0, Math.PI * 2, true);
+                cg1.closePath();
+                cg1.fill();
+
+                //DISEGNO L'OGGETTO
+                cg1.beginPath(); //bordo esterno
+                cg1.fillStyle = 'black';
+                cg1.arc(x_obj + L / 2, y_obj + H / 2, r_obj + 1, 0, Math.PI * 2, true);
+                cg1.closePath();
+                cg1.fill();
+
+                cg1.beginPath(); //cerchio verde
+                cg1.fillStyle = 'green';
+                cg1.arc(x_obj + L / 2, y_obj + H / 2, r_obj, 0, Math.PI * 2, true);
+                cg1.closePath();
+                cg1.fill();
+
+                //DISEGNO IL PERSONAGGIO
+                cg1.beginPath(); //bordo esterno
+                cg1.fillStyle = 'black';
+                cg1.arc(x + L / 2, y + H / 2, (r + 0.5) * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), 0, Math.PI * 2, true);
+                cg1.closePath();
+                cg1.fill();
+
+                cg1.beginPath(); //cerchio rosso
+                cg1.fillStyle = 'red';
+                cg1.arc(x + L / 2, y + H / 2, r * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), 0, Math.PI * 2, true);
+                cg1.closePath();
+                cg1.fill();
+
+                cg1.beginPath(); //visiera
+                cg1.fillStyle = 'black';
+                cg1.arc(x + L / 2, y + H / 2, r * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), -dir + 0.9, -dir - 0.9, true);
+                cg1.closePath();
+                cg1.fill();
+            }
+
+            function draw2() {
+                let k = 0.65;
+                cg2.clearRect(0, 0, L, H);
+
+                cg2.beginPath();
+                cg2.fillStyle = 'black';
+                cg2.arc(L / 2, H / 2, (WORLD_R + 2) * k, 0, Math.PI * 2, true);
+                cg2.closePath();
+                cg2.fill();
+
+                cg2.beginPath();
+                cg2.fillStyle = 'rgb(250, 250, 190)';
+                cg2.arc(L / 2, H / 2, WORLD_R * k, 0, Math.PI * 2, true);
+                cg2.closePath();
+                cg2.fill();
+
+                cg2.beginPath();
+                cg2.fillStyle = 'black';
+                cg2.arc(x * k + L / 2, y * k + H / 2, (r + 0.5) * k, 0, Math.PI * 2, true);
+                cg2.closePath();
+                cg2.fill();
+
+                cg2.beginPath();
+                cg2.fillStyle = 'red';
+                cg2.arc(x * k + L / 2, y * k + H / 2, r * k, 0, Math.PI * 2, true);
+                cg2.closePath();
+                cg2.fill();
+
+                cg2.beginPath();
+                cg2.fillStyle = 'black';
+                cg2.arc(x * k + L / 2, y * k + H / 2, r * k, -dir + 0.9, -dir - 0.9, true);
+                cg2.closePath();
+                cg2.fill();
+
+                let l_bar = 20;
+                let h_bar = H * 3 / 5;
+                var R = (x ** 2 + y ** 2) ** 0.5;
+                let d = deep(R / WORLD_R);
+                if (d > 0) {
+                    cg2.font = "20px Arial";
+                    cg2.fillText((parseFloat('0.' + '9'.repeat(d)) * 100).toString().slice(0, d + 1) + '%', 15, 95);
+                    cg2.fillText((parseFloat('0.' + '9'.repeat(d - 1)) * 100).toString().slice(0, d) + '%', 15, 420);
+                    cg2.fillStyle = color_N(d - 1); //colore vecchio
+                    cg2.fillRect(20, (H - h_bar) / 2, l_bar, h_bar);
+                    cg2.fillStyle = color_N(d);
+                    let h_barD = (R / WORLD_R - (1 - (1 / 10) ** (d - 1))) / 9 * (10) ** d * h_bar;
+                    cg2.fillRect(20, (H + h_bar) / 2 - h_barD, l_bar, h_barD);
+                    cg2.fillStyle = 'black';
+                    cg2.strokeRect(20, (H + h_bar) / 2 - h_barD, l_bar, h_barD);
+                }
+                cg2.fillStyle = 'black'
+                cg2.strokeRect(20, (H - h_bar) / 2, l_bar, h_bar);
+                cg2.font = "35px Arial";
+                let rapp = R / WORLD_R;
+                cg2.fillText((rapp * 100).toFixed(5) + '%', 25, 480);
+                dist_reale = funzione_distanza(rapp);
+                cg2.fillText(dist_reale.toFixed(5), 340, 480);
+                cg2.font = "15px Arial";
+                cg2.fillText('Bordo raggiunto:', 25, 450);
+                cg2.fillText('Distanza dal centro effettiva:', 300, 450);
+            }
+
+            function draw3() {
+                // Scala e offset per grafico
+                let xScale = 490;
+                let yScale = 150;
+                let xOffset = 10;
+                let yOffset = 490;
+
+                // Disegna gli assi
+                cg3.beginPath();
+                cg3.moveTo(0, yOffset);
+                cg3.lineTo(600, yOffset);
+                cg3.moveTo(xOffset, 0);
+                cg3.lineTo(xOffset, 600);
+                cg3.strokeStyle = 'black';
+                cg3.stroke();
+
+                //Disegna la griglia
+                cg3.beginPath();
+                cg3.strokeStyle = '#eee';
+                cg3.font = "10px Arial";
+
+                //Linee verticali
+                for (let x = 0; x <= L; x += 50) {
+                    cg3.moveTo(x, 0);
+                    cg3.lineTo(x, H);
+                    if (x % (50 * 2) === 0) {
+                        cg3.fillText(String(x / 500), x - 7, 490);
+                    }
+                }
+
+                // Linee orizzontali ogni 50 pixel
+                let dy = Math.floor(50 * yScale / xScale);
+                for (let y = 0; y <= H; y += dy) {
+                    cg3.moveTo(0, y);
+                    cg3.lineTo(L, y);
+                    if (y % (2 * dy) == 0) {
+                        cg3.fillText(String(y / (10 * dy)), 10, 497 - y);
+                    }
+                }
+
+                cg3.stroke();
+
+                // Disegna il grafico
+                cg3.beginPath();
+                cg3.moveTo(0, yOffset - funzione_distanza(0) * yScale);
+
+                for (let x = 0; x < 600; x++) {
+                    let xCoord = (x - xOffset) / xScale;
+                    let yCoord = yOffset - funzione_distanza(xCoord) * yScale;
+                    cg3.lineTo(x, yCoord);
+                }
+
+                cg3.strokeStyle = 'blue';
+                cg3.stroke();
+
+                //Label assi
+                cg3.font = "17px Arial";
+                cg3.fillText('Distanza euclidea di', 335, 450);
+                cg3.fillText('un punto dal centro', 340, 470);
+                cg3.fillText('Distanza effettiva per', 30, 30);
+                cg3.fillText('un abitante del mondo', 30, 50);
+            }
+
+            function draw4() {
+                //simile a draw1(), ma con il disegno della circonferenza e modalità gara
+                cg4.clearRect(0, 0, L, H);
+
+                if (winner == 1) {
+                    cg4.rect(0, 0, L, H);
+                    cg4.fillStyle = "red";
+                    cg4.fill();
+                } else if (winner == 2) {
+                    cg4.rect(0, 0, L, H);
+                    cg4.fillStyle = "blue";
+                    cg4.fill();
+                }
+                //DISEGNO IL MONDO
+                cg4.beginPath(); //bordo esterno
+                cg4.fillStyle = 'black';
+                cg4.arc(L / 2, H / 2, WORLD_R + 2, 0, Math.PI * 2, true);
+                cg4.closePath();
+                cg4.fill();
+
+                cg4.beginPath(); //cerchio giallo
+                cg4.fillStyle = 'rgb(250, 250, 190)';
+                cg4.arc(L / 2, H / 2, WORLD_R, 0, Math.PI * 2, true);
+                cg4.closePath();
+                cg4.fill();
+
+                if (MODE_GARA == 0) {
+                    drawcircle3(cg4, x, y, x_obj, y_obj);
+                } else if (MODE_GARA == 1) {
+                    drawcircle3(cg4, x_start, y_start, x_obj, y_obj);
+                }
+
+                //DISEGNO L'OGGETTO
+                cg4.beginPath(); //bordo esterno
+                cg4.fillStyle = 'black';
+                cg4.arc(x_obj + L / 2, y_obj + H / 2, r_obj + 1, 0, Math.PI * 2, true);
+                cg4.closePath();
+                cg4.fill();
+
+                cg4.beginPath(); //cerchio verde
+                cg4.fillStyle = 'green';
+                cg4.arc(x_obj + L / 2, y_obj + H / 2, r_obj, 0, Math.PI * 2, true);
+                cg4.closePath();
+                cg4.fill();
+
+                //DISEGNO IL PERSONAGGIO
+                cg4.beginPath(); //bordo esterno
+                cg4.fillStyle = 'black';
+                cg4.arc(x + L / 2, y + H / 2, (r + 0.5) * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), 0, Math.PI * 2, true);
+                cg4.closePath();
+                cg4.fill();
+
+                cg4.beginPath(); //cerchio rosso
+                cg4.fillStyle = 'red';
+                cg4.arc(x + L / 2, y + H / 2, r * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), 0, Math.PI * 2, true);
+                cg4.closePath();
+                cg4.fill();
+
+                cg4.beginPath(); //visiera
+                cg4.fillStyle = 'black';
+                cg4.arc(x + L / 2, y + H / 2, r * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), -dir + 0.9, -dir - 0.9, true);
+                cg4.closePath();
+                cg4.fill();
+
+                if (MODE_GARA == 1) {
+                    //DISEGNO L'AVVERSARIO
+                    cg4.beginPath(); //bordo esterno 
+                    cg4.fillStyle = 'black';
+                    cg4.arc(x_opp + L / 2, y_opp + H / 2, (r_opp + 0.5) * (1 - ((x_opp ** 2 + y_opp ** 2) / (WORLD_R ** 2))), 0, Math.PI * 2, true);
+                    cg4.closePath();
+                    cg4.fill();
+
+                    cg4.beginPath(); //cerchio blu
+                    cg4.fillStyle = 'blue';
+                    cg4.arc(x_opp + L / 2, y_opp + H / 2, r_opp * (1 - ((x_opp ** 2 + y_opp ** 2) / (WORLD_R ** 2))), 0, Math.PI * 2, true);
+                    cg4.closePath();
+                    cg4.fill();
+
+                    cg4.beginPath(); //visiera
+                    cg4.fillStyle = 'black';
+                    cg4.arc(x_opp + L / 2, y_opp + H / 2, r_opp * (1 - ((x_opp ** 2 + y_opp ** 2) / (WORLD_R ** 2))), -dir_opp + 0.9, -dir_opp - 0.9, true);
+                    cg4.closePath();
+                    cg4.fill();
+                }
+            }
+
+            function draw5_galaxy() {
+                cg5.rect(0, 0, L, H);
+                cg5.fillStyle = "rgb(15, 15, 60)";
+                cg5.fill();
+
+                for (let i = 0; i < 300; i++) {
+                    let x = Math.random() * canvas5.width;
+                    let y = Math.random() * canvas5.height;
+                    let r = Math.random() * 1.5 + 0.2; // raggio casuale tra 0.2 e 1.7
+                    cg5.beginPath();
+                    cg5.arc(x, y, r, 0, Math.PI * 2);
+                    cg5.fillStyle = "white";
+                    cg5.fill();
+                }
+            }
+
+            function draw5() {
+
+                cg5.save(); // salva stato corrente
+
+                cg5.translate(L * 2 / 3, H * 2 / 3);       // sposta il centro
+                cg5.rotate(angle_galaxy);           // ruota rispetto al centro
+                cg5.translate(-L * 2 / 3, -H * 2 / 3);     // torna al sistema originale
+                angle_galaxy += 0.0002;
+                cg5.drawImage(bufferCanvas, -L / 3, -H / 3); // disegna la galassia ruotata
+
+                cg5.restore(); // ripristina stato precedente
+
+                //DISEGNO IL MONDO
+                cg5.beginPath(); //bordo esterno
+                cg5.fillStyle = 'black';
+                cg5.arc(L / 2, H / 2, WORLD_R + 2, 0, Math.PI * 2, true);
+                cg5.closePath();
+                cg5.fill();
+
+                cg5.beginPath(); //cerchio giallo
+                cg5.fillStyle = 'rgb(125, 125, 95)';
+                cg5.arc(L / 2, H / 2, WORLD_R, 0, Math.PI * 2, true);
+                cg5.closePath();
+                cg5.fill();
+
+                if (x == 0 && y == 0) {
+
+                } else {
+                    //circonf non euclidea
+                    const R_saber = 0.4;
+                    let P1 = funzione_inversa(dist_reale + R_saber) * WORLD_R;
+                    let P2 = funzione_inversa(dist_reale - R_saber) * WORLD_R;
+                    let P1_x = x * P1 / R;
+                    let P1_y = y * P1 / R;
+                    let P2_x = x * P2 / R;
+                    let P2_y = y * P2 / R;
+                    let Ctr_x = (P1_x + P2_x) / 2;
+                    let Ctr_y = (P1_y + P2_y) / 2;
+                    let rad_circ = ((Ctr_x - P1_x) ** 2 + (Ctr_y - P1_y) ** 2) ** 0.5;
+
+                    /* cg5.beginPath(); //P1
+                    cg5.fillStyle = 'green';
+                    cg5.arc(P1_x + L / 2, P1_y + H / 2, 4, 0, Math.PI * 2, true);
+                    cg5.closePath();
+                    cg5.fill();
+    
+                    cg5.beginPath(); //P2
+                    cg5.fillStyle = 'green';
+                    cg5.arc(P2_x + L / 2, P2_y + H / 2, 4, 0, Math.PI * 2, true);
+                    cg5.closePath();
+                    cg5.fill();
+    
+                    cg5.beginPath(); //Ctr
+                    cg5.strokeStyle = 'green';
+                    cg5.arc(Ctr_x + L / 2, Ctr_y + H / 2, rad_circ, 0, Math.PI * 2, true);
+                    cg5.closePath();
+                    cg5.stroke(); */
+
+                    [xc2, yc2, r2] = getcircle3(cg5, x, y, x + Math.cos(dir), y - Math.sin(dir));
+                    /* cg5.beginPath(); //TEST
+                    cg5.strokeStyle = 'blue';
+                    cg5.arc(xc2 + L / 2, yc2 + H / 2, r2, 0, Math.PI * 2, true);
+                    cg5.closePath();
+                    cg5.stroke();  */
+                    try{
+                    let [xi, yi] = intersection(Ctr_x, Ctr_y, rad_circ, xc2, yc2, r2);
+
+                    let tetha1 = Math.atan2(y - yc2, x - xc2);
+                    let tetha2 = Math.atan2(yi - yc2, xi - xc2);
+                    tetha1 = tetha1 + Math.PI * 2 * (tetha1 < 0);
+                    tetha2 = tetha2 + Math.PI * 2 * (tetha2 < 0);
+                    let mini = Math.min(tetha1, tetha2);
+                    let maxi = Math.max(tetha1, tetha2)
+
+                    //SPADA LASER
+                    if (keysPressed['p']) {
+                        cg5.beginPath(); //Ctr
+                        cg5.fillStyle = 'rgb(100, 100, 240)';
+                        cg5.arc(Ctr_x + L / 2, Ctr_y + H / 2, rad_circ, 0, Math.PI * 2, true);
+                        cg5.closePath();
+                        cg5.fill();
+                    }
+                    cg5.beginPath();
+                    cg5.strokeStyle = 'blue';
+                    cg5.lineWidth = 5;
+                    cg5.arc(xc2 + L / 2, yc2 + H / 2, r2, mini, maxi, (maxi - mini > Math.PI));
+                    cg5.stroke();
+
+                    cg5.beginPath();
+                    cg5.strokeStyle = 'white';
+                    cg5.lineWidth = 1;
+                    cg5.arc(xc2 + L / 2, yc2 + H / 2, r2, mini, maxi, (maxi - mini > Math.PI));
+                    cg5.stroke();
+                    }catch(e){
+                    }
+
+                }
+
+                //DISEGNO IL PERSONAGGIO
+                cg5.beginPath(); //bordo esterno
+                cg5.fillStyle = 'black';
+                cg5.arc(x + L / 2, y + H / 2, (r + 0.5) * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), 0, Math.PI * 2, true);
+                cg5.closePath();
+                cg5.fill();
+
+                cg5.beginPath(); //cerchio rosso
+                cg5.fillStyle = 'rgb(100, 0, 0)';
+                cg5.arc(x + L / 2, y + H / 2, r * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), 0, Math.PI * 2, true);
+                cg5.closePath();
+                cg5.fill();
+
+                cg5.beginPath(); //visiera
+                cg5.fillStyle = 'black';
+                cg5.arc(x + L / 2, y + H / 2, r * (1 - ((x ** 2 + y ** 2) / (WORLD_R ** 2))), -dir + 0.9, -dir - 0.9, true);
+                cg5.closePath();
+                cg5.fill();
+            }
+
+            function drawSketchyLine(ctx, x1, y1, x2, y2) {
+                cg6.strokeStyle = '#555';
+                cg6.lineWidth = 0.7;
+                cg6.shadowColor = 'rgba(100,100,100,0.4)';
+                cg6.shadowBlur = 0.5;
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+                const segments = 20;
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                for (let i = 1; i < segments; i++) {
+                    const t = i / segments;
+                    const x = x1 + dx * t + (Math.random() - 0.5) * 2;
+                    const y = y1 + dy * t + (Math.random() - 0.5) * 2;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+
+            function drawSketchyCircle(ctx, cx, cy, r) {
+                cg6.strokeStyle = '#555';
+                cg6.lineWidth = 0.7;
+                cg6.shadowColor = 'rgba(100,100,100,0.4)';
+                cg6.shadowBlur = 0.5;
+                ctx.beginPath();
+                const steps = 100;
+                for (let i = 0; i <= steps; i++) {
+                    const angle = (i / steps) * 2 * Math.PI;
+                    const x = cx + r * Math.cos(angle) + (Math.random() - 0.5) * 4/(0.001*r+2) * (1-(i==0))*(1-(i==100));
+                    const y = cy + r * Math.sin(angle) + (Math.random() - 0.5) * 5/(0.001*r+2) * (1-(i==0))*(1-(i==100));
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            function drawSketchyPoint(x, y) {
+                cg6.strokeStyle = '#555';
+                cg6.lineWidth = 0.2;
+                cg6.shadowColor = 'rgba(100,100,100,0.4)';
+                cg6.shadowBlur = 0.5;
+                cg6.beginPath();
+                cg6.arc(x, y, 2, 0, Math.PI * 2);
+                cg6.fill();
+            }
+
+            function draw6_paper() {
+                var background = new Image();
+                background.src = 'paper.jpg';
+                background.onload = () => {
+                    cg6.drawImage(background, 0, 0, L, H);
+                    drawSketchyCircle(cg6, L / 2, H / 2, WORLD_R);
+                    drawSketchyCircle(cg6, L / 2, H / 2, WORLD_R);
+                    drawSketchyCircle(cg6, L / 2, H / 2, WORLD_R);
+                };
+                points6 = [];
+            }
+
+            var animate = function (time) {
+                /* Ho deciso di chiamare due volte move() ad ogni frame rispetto
+                a chiamarlo un'unica volta con il doppio della velocità
+                per migliorarne la precisione */
+                move();
+                move();
+                draw1();
+                draw2();
+                draw4();
+                draw5();
+
+                window.requestAnimationFrame(animate);
+            }
+
+            animate(0);
+        </script>
+    </div>
+</body>
+
+</html>

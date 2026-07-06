@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Pentagramma — blocco note musicale</title>
+  <style>
+    :root {
+      --paper: #f7f3e8;
+      --paper-line: #e4dcc6;
+      --ink: #0c091c;
+      --ink-soft: #5b5674;
+      --gold: #b8892b;
+      --gold-soft: #ecd9a8;
+      --wine: #7a2e3a;
+      --wine-soft: #f0dde0;
+      --focus: #3a5a8c;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: var(--ink);
+      font-family: Consolas, "Courier New", monospace;
+      color: var(--ink);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ---------- Header / staff signature ---------- */
+    header {
+      position: relative;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 15px 16px 16px;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      margin: 0 0 0px;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+
+    .staff {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      width: 93%;
+      height: 29px;
+
+      transform: translateX(-50%);
+
+      opacity: .4;
+      z-index: 0;
+
+      background-image: repeating-linear-gradient(to bottom,
+          rgba(247, 243, 232, .35) 0px,
+          rgba(247, 243, 232, .35) 1.3px,
+          transparent 1.3px,
+          transparent 6px);
+    }
+
+    /* ---------- Toolbar ---------- */
+    .toolbar {
+      position: relative;
+      background: var(--ink);
+      padding: 0 12px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      flex-shrink: 0;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .action-btn {
+      font-family: Consolas, "Courier New", monospace;
+      border: 1px solid rgba(247, 243, 232, .25);
+      background: rgba(247, 243, 232, .06);
+      color: var(--paper);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: .85rem;
+      font-weight: 600;
+      letter-spacing: .03em;
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s ease, transform .1s ease, border-color .15s ease;
+    }
+
+    .action-btn:active {
+      transform: scale(0.96);
+    }
+
+    .action-btn.primary {
+      background: var(--wine);
+      border-color: var(--wine);
+      color: var(--paper);
+    }
+
+    /* ---------- Switch destra/sinistra ---------- */
+    .switch-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      background: rgba(247, 243, 232, .06);
+      border: 1px solid rgba(247, 243, 232, .25);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--paper);
+      text-align: center;
+      width: 120px;
+    }
+
+    .switch-label {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: rgba(247, 243, 232, .4);
+      transition: color .15s ease;
+    }
+
+    .switch-label.active {
+      color: var(--gold-soft);
+    }
+
+    .switch-track {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(247, 243, 232, .18);
+      border: 1px solid rgba(247, 243, 232, .3);
+      padding: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .switch-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gold);
+      transition: transform .18s ease;
+    }
+
+    .switch-track[aria-checked="true"] .switch-knob {
+      transform: translateX(18px);
+    }
+
+    .switch-track[aria-checked="true"] {
+      background: rgba(184, 137, 43, .35);
+    }
+
+    .transpose-group {
+      display: flex;
+      align-items: center;
+      background: rgba(247, 243, 232, .06);
+      border: 1px solid rgba(247, 243, 232, .25);
+      border-radius: 999px;
+      padding: 3px;
+    }
+
+    .transpose-group button {
+      font-family: Consolas, "Courier New", monospace;
+      border: none;
+      background: transparent;
+      color: var(--paper);
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 7px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .transpose-group button:active {
+      background: rgba(247, 243, 232, .18);
+    }
+
+    .transpose-total {
+      font-family: Consolas, "Courier New", monospace;
+      color: var(--gold-soft);
+      font-size: .78rem;
+      min-width: 34px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    /* ---------- Note palette ---------- */
+    #palette {
+      display: none;
+      position: relative;
+      background: #ffffff10;
+      border-top: 1px solid rgba(247, 243, 232, .2);
+      padding: 22px 0px 14px;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+      justify-content: center;
+    }
+
+    #palette.visible {
+      display: flex;
+    }
+
+    .note-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 1rem;
+      font-weight: 700;
+
+      width: 10%;
+      min-width: 46px;
+      padding: 10px 13px;
+
+      border: 1px solid var(--gold);
+      background: var(--gold-soft);
+      color: var(--ink);
+      border-radius: 10px;
+      cursor: pointer;
+      line-height: 1;
+
+    }
+
+    .note-btn:active {
+      background: var(--gold);
+    }
+
+    /* ---------- Editor ---------- */
+    main {
+      flex: 1;
+      background: var(--paper);
+      display: flex;
+      overflow: auto;
+    }
+
+    #editor {
+      font-family: Consolas, "Courier New", monospace;
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px 18px 60px;
+      font-size: 1.08rem;
+      line-height: 2.1;
+      outline: none;
+      background-image: repeating-linear-gradient(to bottom,
+          transparent 0, transparent calc(2.1em - 1.5px),
+          var(--paper-line) calc(2.1em - 1.5px), var(--paper-line) 2.1em);
+      background-position: 0 12px;
+    }
+
+    .note {
+      display: inline-block;
+      background: var(--wine-soft);
+      border: 1px solid var(--wine);
+      color: var(--wine);
+      font-weight: 700;
+      font-family: Consolas, "Courier New", monospace;
+      padding: 0px 5px;
+      border-radius: 8px;
+      margin: 0 1px;
+      font-size: .95em;
+      line-height: 1.6;
+      white-space: nowrap;
+      transform: translateY(-5px);
+    }
+
+    footer {
+      flex-shrink: 0;
+      text-align: center;
+      padding: 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: .7rem;
+      color: rgba(247, 243, 232, .5);
+      background: var(--ink);
+    }
+
+    .phone {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #settingsBtn {
+      position: fixed;
+      top: 0px;
+      right: 0px;
+      transform: translate(7px, -8px);
+      z-index: 9999;
+
+      width: 40px;
+      height: 40px;
+      padding: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: none;
+      border-radius: 50%;
+
+      background: var(--gold);
+
+      font-size: 25px;
+      cursor: pointer;
+
+      transition: background .2s ease, transform .15s ease;
+    }
+
+    dialog {
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid rgba(247, 243, 232, .2);
+      border-radius: 30px;
+      padding: 30px;
+      align-items: center;
+    }
+
+    dialog:open {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, .45);
+    }
+
+
+    .settings-grid {
+      line-height: 1.2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .settings-group {
+      border: 2px solid rgba(247, 243, 232, .2);
+      padding: 0;
+      margin: 0;
+
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .settings-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .settings-group legend {
+      font-weight: bold;
+    }
+
+    .blocco-impost {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .palette-title {
+      width: 100%;
+      position: absolute;
+      top: 4px;
+      left: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="phone">
+    <header>
+      <h1>♪ Blocco NOTE</h1>
+      <button id="settingsBtn">⚙️</button>
+      <div class="staff"></div>
+    </header>
+
+
+
+    <dialog id="settings">
+      <h3>Impostazioni</h3>
+
+      <div class="blocco-impost">
+        <div>
+          Nome note:
+        </div>
+
+        <div class="switch-wrap">
+          <span class="switch-label">ITA</span>
+          <button id="langSwitch" class="switch-track" role="switch" aria-checked="false"
+            aria-label="Lingua della nota"><span class="switch-knob"></span></button>
+          <span class="switch-label">ENG</span>
+        </div>
+
+      </div>
+
+      <div class="blocco-impost">
+        <div>
+          Alterazioni:
+        </div>
+
+        <div class="switch-wrap">
+          <span class="switch-label">♯</span>
+          <button id="accidentalSwitch" class="switch-track" role="switch" aria-checked="false"
+            aria-label="Diesis o bemolle"><span class="switch-knob"></span></button>
+          <span class="switch-label">♭</span>
+        </div>
+      </div>
+
+
+
+
+      <br>
+
+      <div class="settings-grid">
+
+        <fieldset class="settings-group">
+          <legend>Scala</legend>
+
+          <label><input type="radio" name="scala" value="Cromatica" checked> Cromatica</label>
+          <label><input type="radio" name="scala" value="Pentatonica"> Pentatonica</label>
+          <br>
+          <label><input type="radio" name="scala" value="Ionica"> Ionica</label>
+          <label><input type="radio" name="scala" value="Dorica"> Dorica</label>
+          <label><input type="radio" name="scala" value="Frigia"> Frigia</label>
+          <label><input type="radio" name="scala" value="Lidia"> Lidia</label>
+          <label><input type="radio" name="scala" value="Misolidia"> Misolidia</label>
+          <label><input type="radio" name="scala" value="Eolia"> Eolia</label>
+          <label><input type="radio" name="scala" value="Locria"> Locria</label>
+
+        </fieldset>
+
+        <fieldset class="settings-group">
+          <legend>Di</legend>
+          <div id="rootNotes"></div>
+        </fieldset>
+
+      </div>
+
+
+      <br><br>
+
+      <button id="closeSettings" class="switch-wrap">Fatto</button>
+    </dialog>
+
+    <div class="toolbar">
+      <div class="switch-wrap">
+        <span class="switch-label"></span>
+        <button id="capsSwitch" class="switch-track" role="switch" aria-checked="false"
+          aria-label="Maiuscolo per le prossime note inserite"><span class="switch-knob"></span></button>
+        <span class="switch-label">CAPS</span>
+      </div>
+
+      <button id="paletteToggle" class="action-btn primary">🎵 Note ▼ </button>
+
+      <div class="transpose-group">
+        <button id="downBtn" aria-label="trasponi giù">−</button>
+        <span class="transpose-total" id="transposeTotal">0</span>
+        <button id="upBtn" aria-label="trasponi su">+</button>
+      </div>
+    </div>
+
+    <div id="palette"></div>
+
+    <main>
+      <div id="editor" contenteditable="true" spellcheck="false"></div>
+    </main>
+
+    <footer>salvataggio automatico</footer>
+
+  </div>
+
+
+  <script>
+
+
+    const editor = document.getElementById('editor');
+    const palette = document.getElementById('palette');
+    const langSwitch = document.getElementById('langSwitch');
+    const accidentalSwitch = document.getElementById('accidentalSwitch');
+    const capsSwitch = document.getElementById('capsSwitch');
+    const paletteToggle = document.getElementById('paletteToggle');
+    const upBtn = document.getElementById('upBtn');
+    const downBtn = document.getElementById('downBtn');
+    const transposeTotalEl = document.getElementById('transposeTotal');
+
+    const STORAGE_KEY = 'music-notes-pad';
+    const SETTINGS_KEY = 'music-notes-pad-settings';
+
+    // ---- stato ----
+    let lang = 'ITA';          // 'ITA' | 'ENG'
+    let accidental = 'sharp';  // 'sharp' | 'flat'
+    let caps = false;          // maiuscolo/minuscolo
+    let transposeTotal = 0;
+
+    // ---- tabella note: valore 0 (Do/C) .. 11 (Si/B) ----
+    const NOTE_NAMES = {
+      ITA: {
+        sharp: ["Do", "Do#", "Re", "Re#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si"],
+        flat: ["Do", "Re♭", "Re", "Mi♭", "Mi", "Fa", "Sol♭", "Sol", "La♭", "La", "Si♭", "Si"]
+      },
+      ENG: {
+        sharp: ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+        flat: ["C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"]
+      }
+    };
+
+    // isCaps è specifico per ogni singola nota: le note già scritte
+    // mantengono per sempre il maiuscolo/minuscolo che avevano al momento
+    // dell'inserimento, anche se poi si sposta lo switch abc/ABC.
+    function formatName(value, isCaps) {
+      const name = NOTE_NAMES[lang][accidental][value];
+      return isCaps ? name.toUpperCase() : name.toLowerCase();
+    }
+
+    // ---- salvataggio ----
+    function save() {
+      localStorage.setItem(STORAGE_KEY, editor.innerHTML);
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ lang, accidental, caps, transposeTotal }));
+    }
+
+    function load() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) editor.innerHTML = saved;
+
+      const savedSettings = localStorage.getItem(SETTINGS_KEY);
+      if (savedSettings) {
+        try {
+          const s = JSON.parse(savedSettings);
+          if (s.lang) lang = s.lang;
+          if (s.accidental) accidental = s.accidental;
+          if (typeof s.caps === 'boolean') caps = s.caps;
+          if (typeof s.transposeTotal === 'number') transposeTotal = s.transposeTotal;
+        } catch (e) { }
+      }
+    }
+
+    // ---- render ----
+    // il nome/lingua/alterazione si applicano a TUTTE le note (passate e future);
+    // il maiuscolo/minuscolo invece resta quello salvato su ogni singola nota.
+    function renderAllNotes() {
+      editor.querySelectorAll('.note').forEach(el => {
+        const v = parseInt(el.dataset.value, 10);
+        const isCaps = el.dataset.caps === '1';
+        el.textContent = formatName(v, isCaps);
+      });
+    }
+
+    function setSwitchState(switchEl, isRight) {
+      switchEl.setAttribute('aria-checked', String(isRight));
+      const labels = switchEl.parentElement.querySelectorAll('.switch-label');
+      labels[0].classList.toggle('active', !isRight);
+      labels[1].classList.toggle('active', isRight);
+    }
+
+    function updateSwitchUI() {
+      setSwitchState(langSwitch, lang === 'ENG');
+      setSwitchState(accidentalSwitch, accidental === 'flat');
+      setSwitchState(capsSwitch, caps === true);
+
+      transposeTotalEl.textContent = (transposeTotal > 0 ? '+' : '') + transposeTotal;
+    }
+
+    function buildPalette() {
+      palette.innerHTML = '';
+
+      const scala = document.querySelector('input[name="scala"]:checked').value;
+      const tonica = Number(document.querySelector('input[name="tonica"]:checked').value);
+
+      const title = document.createElement('div');
+      title.className = 'palette-title';
+      title.textContent = `Scala ${scala} di ${formatName(tonica, caps)}`;
+
+      palette.appendChild(title);
+      const note = getScala(scala, tonica);
+
+      for (const v of note) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'note-btn';
+
+        btn.textContent = formatName(v, caps);
+        btn.dataset.value = v;
+
+        btn.addEventListener('click', () => insertNote(v));
+
+        palette.appendChild(btn);
+      }
+    }
+
+    function afterSettingsChange() {
+      buildRootNotes();
+      updateSwitchUI();
+      renderAllNotes();
+      buildPalette();
+      save();
+    }
+
+    // ---- inserimento nota nel punto del cursore ----
+    function insertNoteAtRange(range, node) {
+      range.insertNode(node);
+      range.setStartAfter(node);
+      range.setEndAfter(node);
+    }
+
+    function insertNote(value) {
+      editor.focus();
+
+      const sel = window.getSelection();
+      let range;
+      if (sel.rangeCount && editor.contains(sel.anchorNode)) {
+        range = sel.getRangeAt(0);
+      } else {
+        range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+      }
+      range.deleteContents();
+
+      const span = document.createElement('span');
+      span.className = 'note';
+      span.contentEditable = 'false';
+      span.dataset.value = value;
+      span.dataset.caps = caps ? '1' : '0'; // il caso resta fissato a questa nota
+      span.textContent = formatName(value, caps);
+
+      insertNoteAtRange(range, span);
+
+      const spacer = document.createTextNode('\u00A0');
+      insertNoteAtRange(range, spacer);
+
+      sel.removeAllRanges();
+      sel.addRange(range);
+
+      save();
+    }
+
+    // ---- trasposizione ----
+    function transpose(semitones) {
+      editor.querySelectorAll('.note').forEach(el => {
+        let v = parseInt(el.dataset.value, 10);
+        v = ((v + semitones) % 12 + 12) % 12;
+        el.dataset.value = v;
+      });
+      transposeTotal += semitones;
+      updateSwitchUI();
+      renderAllNotes();
+      save();
+    }
+
+    // ---- dialog ----
+    const dialog = document.getElementById("settings");
+    settingsBtn.onclick = () => dialog.showModal();
+    closeSettings.onclick = () => dialog.close();
+
+    // ---- eventi ----
+    langSwitch.addEventListener('click', () => {
+      lang = lang === 'ITA' ? 'ENG' : 'ITA';
+      afterSettingsChange(); // lingua: si applica anche alle note già scritte
+    });
+
+    accidentalSwitch.addEventListener('click', () => {
+      accidental = accidental === 'sharp' ? 'flat' : 'sharp';
+      afterSettingsChange(); // alterazioni: si applica anche alle note già scritte
+    });
+
+    capsSwitch.addEventListener('click', () => {
+      caps = !caps;
+      // il maiuscolo/minuscolo NON si applica retroattivamente:
+      // riguarda solo le note che verranno inserite da ora in poi.
+      updateSwitchUI();
+      buildPalette();
+      save();
+    });
+
+    paletteToggle.addEventListener('click', () => {
+      palette.classList.toggle('visible');
+      if (paletteToggle.textContent.includes("▼")) {
+        paletteToggle.textContent = "🎵 Note ▲";
+      } else {
+        paletteToggle.textContent = "🎵 Note ▼";
+      }
+    });
+
+    upBtn.addEventListener('click', () => transpose(1));
+    downBtn.addEventListener('click', () => transpose(-1));
+
+    editor.addEventListener('input', save);
+
+
+    function getScala(scala, tonica) {
+      let intervalli;
+
+      switch (scala) {
+        case "Cromatica":
+          intervalli = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+          break;
+        case "Pentatonica":
+          intervalli = [0, 2, 2, 3, 2];
+          break;
+
+        case "Ionica":
+          intervalli = [0, 2, 2, 1, 2, 2, 2];
+          break;
+
+        case "Dorica":
+          intervalli = [0, 2, 1, 2, 2, 2, 1];
+          break;
+
+        case "Frigia":
+          intervalli = [0, 1, 2, 2, 2, 1, 2];
+          break;
+
+        case "Lidia":
+          intervalli = [0, 2, 2, 2, 1, 2, 2];
+          break;
+
+        case "Misolidia":
+          intervalli = [0, 2, 2, 1, 2, 2, 1];
+          break;
+
+        case "Eolia":
+          intervalli = [0, 2, 1, 2, 2, 1, 2];
+          break;
+
+        case "Locria":
+          intervalli = [0, 1, 2, 2, 1, 2, 2];
+          break;
+
+        default:
+          return [];
+      }
+
+      const scalaNote = [];
+      let nota = tonica;
+
+      scalaNote.push(nota);
+
+      // salta il primo 0
+      for (let i = 1; i < intervalli.length; i++) {
+        nota = (nota + intervalli[i]) % 12;
+        scalaNote.push(nota);
+      }
+
+      return scalaNote;
+    }
+
+
+
+    //----- impostazioni ----
+    function buildRootNotes() {
+
+      const container = document.getElementById("rootNotes");
+      container.innerHTML = "";
+
+      NOTE_NAMES[lang][accidental].forEach((name, value) => {
+
+        const label = document.createElement("label");
+
+        label.innerHTML = `
+      <input
+        type="radio"
+        name="tonica"
+        value="${value}"
+        ${value === 0 ? "checked" : ""}>
+      ${name}
+    `;
+
+        const radio = label.querySelector('input');
+        radio.addEventListener('change', buildPalette);
+
+        container.appendChild(label);
+      });
+
+    }
+    document.querySelectorAll('input[name="scala"]').forEach(radio => {
+      radio.addEventListener('change', buildPalette);
+    });
+
+    // ---- avvio ----
+    buildRootNotes();
+    load();
+    updateSwitchUI();
+    renderAllNotes();
+    buildPalette();
+
+
+  </script>
+
+</body>
+
+</html>

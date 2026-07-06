@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Battaglia AstroNavale.js</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: rgb(0, 0, 0);
+      color: white;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background: linear-gradient(180deg, rgba(20, 20, 60, 0.8) 0%, rgba(0, 0, 0, 0.5) 100%);
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #00d4ff;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      font-size: 1.2em;
+      color: #aaaaaa;
+      margin-bottom: 5px;
+    }
+
+    #comandi {
+      box-shadow: inset 0 0 0 2px #28a113;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    #Totale {
+      display: flex;
+      flex: 1;
+      position: relative;
+
+      box-shadow: inset 0 0 0 2px #0e269a;
+      border-radius: 8px;
+
+      padding: 10px;
+      min-height: 80vh;
+    }
+
+    #canvasContainer {
+      box-shadow: inset 0 0 0 2px #30bf17;
+      border-radius: 8px;
+      padding: 20px;
+
+      min-height: 20vh;
+      display: flex;
+      position: relative;
+
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1em;
+      line-height: 1.9;
+    }
+
+    .side {
+      flex: 1;
+      justify-content: center;
+
+      box-shadow: inset 0 0 0 2px #30bf17;
+      border-radius: 8px;
+      padding: 5px;
+    }
+
+    .view {
+      flex: 3;
+      justify-content: center;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    .controls {
+      color: #00d4ff;
+    }
+  </style>
+  <script src="https://unpkg.com/three@0.158.0/build/three.min.js" defer></script>
+  <script src="./Inizializzare.js" defer></script>
+  <script src="./DrawNavi.js" defer></script>
+  <script src="./stelle.js" defer></script>
+  <script src="./finestre2d.js" defer></script>
+  <script src="./griglie.js" defer></script>
+  <script src="./astronavi.js" defer></script>
+  <script src="./principale.js" defer></script>
+</head>
+
+<body>
+
+
+  <div id="Totale">
+    <div class="side">
+      <canvas id="overlay1" width="180" height="630" style="width: 100%;"></canvas>
+    </div>
+    <div id="myShips" class="view"> </div>
+    <div id="enemyShips" class="view"></div>
+    <div class="side">
+      <canvas id="overlay2" width="180" height="630" style="width: 100%;">
+      </canvas>
+    </div>
+  </div>
+
+  <div id="canvasContainer">
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      Navi X <br>
+      <canvas id="NaviX" width="112" height="96"></canvas>
+    </div>
+
+    <div style="flex: 2; text-align: center;">
+      COMANDI:<br>
+      1-2-3-4-5-6-0: SELEZIONA LA NAVE DA MUOVERE<br>
+      W-A-S-D-Q-E: MUOVI NELLO SPAZIO<br>
+      FRECCE DIREZIONALI: CAMBIA ANGOLAZIONE<br>
+    </div>
+
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      Navi Y<br>
+      <canvas id="NaviY" width="112" height="96"></canvas>
+    </div>
+
+    <div style="flex: 2; text-align: center;">
+      COMANDI:<br>
+      ENTER: CONFERMA POSIZIONE NAVI<br>
+      TAB: CAMBIA SCENARIO<br>
+      I/O = COLPITO/VUOTO
+    </div>
+
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      Navi Z<br>
+      <canvas id="NaviZ" width="112" height="96"></canvas>
+    </div>
+
+  </div>
+
+
+
+</body>
+
+</html>
