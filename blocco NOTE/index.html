@@ -445,7 +445,18 @@
         </div>
       </div>
 
+      <div class="blocco-impost">
+        <div>
+          Aggiungi spazio:
+        </div>
 
+        <div class="switch-wrap">
+          <span class="switch-label">No</span>
+          <button id="spaceSwitch" class="switch-track" role="switch" aria-checked="Sì"
+            aria-label="Spazio dopo nota, No o Sì"><span class="switch-knob"></span></button>
+          <span class="switch-label">Sì</span>
+        </div>
+      </div>
 
 
       <br>
@@ -511,11 +522,12 @@
 
   <script>
 
-
     const editor = document.getElementById('editor');
     const palette = document.getElementById('palette');
     const langSwitch = document.getElementById('langSwitch');
     const accidentalSwitch = document.getElementById('accidentalSwitch');
+    const spaceSwitch = document.getElementById('spaceSwitch');
+    console.log(spaceSwitch)
     const capsSwitch = document.getElementById('capsSwitch');
     const paletteToggle = document.getElementById('paletteToggle');
     const upBtn = document.getElementById('upBtn');
@@ -528,6 +540,8 @@
     // ---- stato ----
     let lang = 'ITA';          // 'ITA' | 'ENG'
     let accidental = 'sharp';  // 'sharp' | 'flat'
+    let space = true;
+    let current_root = 0;
     let caps = false;          // maiuscolo/minuscolo
     let transposeTotal = 0;
 
@@ -594,6 +608,8 @@
     function updateSwitchUI() {
       setSwitchState(langSwitch, lang === 'ENG');
       setSwitchState(accidentalSwitch, accidental === 'flat');
+      setSwitchState(spaceSwitch, space === true);
+      console.log(space);
       setSwitchState(capsSwitch, caps === true);
 
       transposeTotalEl.textContent = (transposeTotal > 0 ? '+' : '') + transposeTotal;
@@ -664,8 +680,10 @@
 
       insertNoteAtRange(range, span);
 
-      const spacer = document.createTextNode('\u00A0');
-      insertNoteAtRange(range, spacer);
+      if (space) {
+        const spacer = document.createTextNode('\u00A0');
+        insertNoteAtRange(range, spacer);
+      }
 
       sel.removeAllRanges();
       sel.addRange(range);
@@ -681,6 +699,11 @@
         el.dataset.value = v;
       });
       transposeTotal += semitones;
+      if (transposeTotal >= 12) {
+        transposeTotal -= 12;
+      } else if (transposeTotal <= -12) {
+        transposeTotal += 12;
+      }
       updateSwitchUI();
       renderAllNotes();
       save();
@@ -689,7 +712,9 @@
     // ---- dialog ----
     const dialog = document.getElementById("settings");
     settingsBtn.onclick = () => dialog.showModal();
-    closeSettings.onclick = () => dialog.close();
+    closeSettings.onclick = () => {
+      dialog.close();
+    }
 
     // ---- eventi ----
     langSwitch.addEventListener('click', () => {
@@ -700,6 +725,11 @@
     accidentalSwitch.addEventListener('click', () => {
       accidental = accidental === 'sharp' ? 'flat' : 'sharp';
       afterSettingsChange(); // alterazioni: si applica anche alle note già scritte
+    });
+
+    spaceSwitch.addEventListener('click', () => {
+      space = space == true ? false : true;
+      afterSettingsChange();
     });
 
     capsSwitch.addEventListener('click', () => {
@@ -800,29 +830,34 @@
         type="radio"
         name="tonica"
         value="${value}"
-        ${value === 0 ? "checked" : ""}>
+        ${value === current_root ? "checked" : ""}>
       ${name}
     `;
 
         const radio = label.querySelector('input');
-        radio.addEventListener('change', buildPalette);
+        radio.addEventListener("change", () => {
+          current_root = Number(radio.value);
+          buildPalette();
+        });
 
         container.appendChild(label);
       });
 
     }
+
     document.querySelectorAll('input[name="scala"]').forEach(radio => {
-      radio.addEventListener('change', buildPalette);
+      radio.addEventListener("change", () => {
+        buildPalette();
+      });
     });
 
     // ---- avvio ----
-  
+
     load();
     buildRootNotes();
     updateSwitchUI();
     renderAllNotes();
     buildPalette();
-    
 
 
   </script>

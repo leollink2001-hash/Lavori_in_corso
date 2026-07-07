@@ -1,6 +1,11 @@
 TO DO LIST
-- Pulsante metti-togli spazio dopo una nota
 - Regolare lo scroll, il top non deve scorrere, ma rimanere sempre in alto
 - Salvare i propri file in pagine diverse
+- Possibilità di condividere/scaricare testi
+- Salvare anche transpos e/o current_root?
 - Quando si trapone, cambia anche la nota di riferimento della scala
--                   mod 12
+
+DONE LIST:
+- Aggiunto spaceSwitch
+- Limitato a -12 / + 12 l'intervallo delle alterazioni
+- Debug: cambiando lingua/alterazioni cambia la nota selezionata
